@@ -14,18 +14,18 @@ float windowWidth = 1280;
 
   //Hasen und Geburtenrate
   float rabbits;
-  float comingRabbits = 0.25;
+  float comingRabbits = 1;
   
   //Füchse und Geburtenrate 
   float foxes;
-  float comingFoxes = 0.15;
+  float comingFoxes = 0.2;
   
   //Sterbevariablen
   //Jedes Jahr wird x Hase pro Fuchs gegessen.
   float eatenRabbitsPerFox = 3;
   
   //Berechnung bis zum Jahr x
-  float years = 100;
+  float years = 5;
 
 // ******* Calculation Variablen ******
 
@@ -50,7 +50,9 @@ public void population(){
     
     //Jeder Fuchs ist x Hasen pro Durchlauf
     //Dies ist der Wunschbedarf der Füchse
-    float wishAmountOfRabbits = round(foxes) * eatenRabbitsPerFox;
+    //float wishAmountOfRabbits = round(foxes) * eatenRabbitsPerFox
+    
+    float wishAmountOfRabbits = (1 - pow(1.0/100.0, rabbits)) * foxes;
     
     
     //Abfrage ob genug Hasen vorhanden sind um gegessen zu werden
@@ -91,13 +93,13 @@ public void population(){
     //Graph für die Hasen
     stroke(50,200,255);
     strokeWeight(2);
-    line(i * 13 ,0,i * 13,rabbits);
+    line(i * 3 ,0,i * 3,rabbits);
     
     
     //Graph für die Füchse
     stroke(50,255,0);
     strokeWeight(2);
-    line(i * 12.5 ,0,i * 12.5,foxes);
+    line(i * 3 +1 ,0,i * 3 + 1,foxes);
     
     
     //Konsolenausgabe
@@ -110,12 +112,12 @@ public void population(){
       println("         ");
       println("> Jahr: " + round(2016 + i));
       println("Hasen: " + rabbits + " | Füchse: " + foxes);
-      println("Wunsch: " + round(wishAmountOfRabbits) + " | Tatsächliche Bedarfszahl: " + round(foxes * 3));
+      println("Wunsch: " + wishAmountOfRabbits);
       println("         ");
     }else{
       println("> Jahr: " + round(2016 + i));
       println("Hasen: " + rabbits + " | Füchse: " + foxes);
-      println("Wunsch: " + round(wishAmountOfRabbits) + " | Tatsächliche Bedarfszahl: " + round(foxes * 3));
+      println("Wunsch: " + wishAmountOfRabbits);
       println("         ");    
     }
      
@@ -127,8 +129,8 @@ void draw(){
 
   //Anfangszahlen im Jahr 0 bevor die Geburtsphase anfängt
   
-  rabbits = 25;
-  foxes = 2;
+  rabbits = 60;
+  foxes = 40;
   
   background(50,50,50);
   
