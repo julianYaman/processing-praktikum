@@ -14,20 +14,23 @@ float windowWidth = 1280;
 
   //Hasen und Geburtenrate
   float rabbits;
-  float comingRabbits = 0.3;
+  float comingRabbits = 0.2;
   
   //Füchse und Geburtenrate foxesWantEat
   float foxes;
-  float comingFoxes = 0.5;
+  float comingFoxes = 0.15;
   
   //Sterbevariablen
   //Jedes Jahr wird x Hase pro Fuchs gegessen.
-  float eatenRabbitsPerFox = 1;
+  float eatenRabbitsPerFox = 2;
   
   //Berechnung bis zum Jahr x
-  float years = 10;
+  float years = 50;
   
-  float n = 10;
+  float n = 202.5;
+  
+  float timeInterval = 1;
+  float graphFac = 5;
 
 // ******* Calculation Variablen ******
 
@@ -35,7 +38,7 @@ float windowWidth = 1280;
 public void population(){
   
   
-  for(float i = 0; i < years; i++){
+  for(float i = 0; i < years; i= i + timeInterval){
   
     
     //Calculation
@@ -56,30 +59,19 @@ public void population(){
     
     float foxesWantEat = foxes * eatenRabbitsPerFox;
     
-    float foxesCanCatch = (foxes / n) * (rabbits / n);
+    float foxesCanCatch = foxes * rabbits / n * foxes /n;
+   
+    float foxesCanEat = min(rabbits, min(foxesWantEat, foxesCanCatch));
     
-    float foxesCanEat;
-    
-    if(foxesWantEat < rabbits){
-      
-      foxesCanEat = foxesWantEat;
-      
       rabbits = rabbits - foxesCanEat;
-      
-      
+
+    
+    float foxesSaturated = foxesCanEat / eatenRabbitsPerFox;
+    if (foxesSaturated < foxes){
+      foxes = foxesSaturated;
     }else{
-    
-      float foxesDie = (foxesWantEat / eatenRabbitsPerFox) - rabbits;
-      
-      foxes = foxes - foxesDie;
-      foxesCanEat = foxes;
-      
-      
-      rabbits = rabbits - foxesCanEat;
-      
+      println("Hey!!!");      
     }
-    
-    
     
     //Um negative Rechnungen zu vermeiden
     if(foxes < 0){
@@ -99,16 +91,16 @@ public void population(){
     //Graph für die Hasen
     stroke(50,200,255);
     strokeWeight(1);
-    line(i * 5 , windowHeight , i * 5 , rabbits);
+    line(i * graphFac , windowHeight , i * graphFac , windowHeight-rabbits);
     
     
     //Graph für die Füchse
     stroke(50,255,0);
     strokeWeight(1);
-    line(i * 5 + 1 , 0 , i * 5 + 1, foxes);
+    line(i * graphFac + 1 , windowHeight , i * graphFac + 1, windowHeight-foxes);
     
     
-    //Konsolenausgabe
+    ////Konsolenausgabe
     if(2016 + round(i) == 2016){
       println("        ");
       println("|##########################|");
@@ -123,8 +115,8 @@ public void population(){
     println("Anzahl an Füchse am Anfang des Jahres: " + foxesAtBeginning);
     println("Geborene Hasen: " + bornRabbits + " (" + (bornRabbits + rabbitsAtBeginning) + ") | Geborene Füchse: " + bornFoxes + " (" + (bornFoxes + foxesAtBeginning) + ")");
     println("         ");
-    println("Erwischt: " + foxesCanEat);
     println("Sie hätten -> " + foxesCanCatch + " <- erwischen können.");
+    println("Gefuttert: " + foxesCanEat);   
     println("Endstand: Hasen: " + rabbits + " | Füchse: " + foxes);
     println("         ");
     println("---------");
@@ -138,8 +130,8 @@ void draw(){
 
   //Anfangszahlen im Jahr 0 bevor die Geburtsphase anfängt
   
-  rabbits = 100;
-  foxes = 10;
+  rabbits = 1000;
+  foxes = 50;
   
   background(50,50,50);
   
