@@ -14,18 +14,20 @@ float windowWidth = 1280;
 
   //Hasen und Geburtenrate
   float rabbits;
-  float comingRabbits = 1;
+  float comingRabbits = 0.3;
   
-  //Füchse und Geburtenrate 
+  //Füchse und Geburtenrate foxesWantEat
   float foxes;
-  float comingFoxes = 0.2;
+  float comingFoxes = 0.5;
   
   //Sterbevariablen
   //Jedes Jahr wird x Hase pro Fuchs gegessen.
-  float eatenRabbitsPerFox = 3;
+  float eatenRabbitsPerFox = 1;
   
   //Berechnung bis zum Jahr x
-  float years = 5;
+  float years = 10;
+  
+  float n = 10;
 
 // ******* Calculation Variablen ******
 
@@ -35,71 +37,75 @@ public void population(){
   
   for(float i = 0; i < years; i++){
   
-    //Geborene Hasen und Füchse
-    //Berechnung: Hälfe aller Hasen und Füchse ist Weiblich und bekommt das x-fache (coming..)
-    //Bislang aber konstante Geburten, nicht abhängig ob viel/e oder wenig/e Beute / Räuber vorhanden sind. 
-    float bornRabbits = (rabbits / 2.0) * comingRabbits;
-    float bornFoxes = (foxes / 2.0) * comingFoxes;
     
-    //Gesamtzahl nach den Geburten der Hasen und Füchse
-    rabbits = bornRabbits + rabbits;
-    foxes = bornFoxes + foxes;
+    //Calculation
+    
+    //Wunschvorstellung der Füchse, wieviele Hasen sie essen wollen
     
     
-    //Beute - Berechnung
+    float rabbitsAtBeginning = rabbits;
+    float foxesAtBeginning = foxes;
     
-    //Jeder Fuchs ist x Hasen pro Durchlauf
-    //Dies ist der Wunschbedarf der Füchse
-    //float wishAmountOfRabbits = round(foxes) * eatenRabbitsPerFox
+    //Soviele Hasen / Füchse werden geboren
+    float bornRabbits = (rabbits / 2) * comingRabbits;
+    float bornFoxes = (foxes / 2) * comingFoxes;
     
-    float wishAmountOfRabbits = (1 - pow(1.0/100.0, rabbits)) * foxes;
+    //Geborene Hasen und Füchse werden dazuaddiert.
+    foxes = foxes + bornFoxes;
+    rabbits = rabbits + bornRabbits;
     
+    float foxesWantEat = foxes * eatenRabbitsPerFox;
     
-    //Abfrage ob genug Hasen vorhanden sind um gegessen zu werden
-    if(rabbits >= wishAmountOfRabbits){
+    float foxesCanCatch = (foxes / n) * (rabbits / n);
+    
+    float foxesCanEat;
+    
+    if(foxesWantEat < rabbits){
       
-      rabbits = round(rabbits) - wishAmountOfRabbits;
+      foxesCanEat = foxesWantEat;
+      
+      rabbits = rabbits - foxesCanEat;
+      
       
     }else{
-      
     
-      //Berechnung wird durchgeführt um zu schauen, wieviele
-      //Füchse nicht esswen können. Diese Füchse werden demzufolge sterben.
-      float foxesCanEat = round(rabbits) / 3;
-      float foxesDieNoFood = round(foxes) - foxesCanEat;
+      float foxesDie = (foxesWantEat / eatenRabbitsPerFox) - rabbits;
       
-      //x Füchse sterben da sie nicht essen können. Diese werden 
-      //von den Füchsen subtrahiert.
-      foxes = round(foxes) - foxesDieNoFood;
+      foxes = foxes - foxesDie;
+      foxesCanEat = foxes;
       
-      //Hasen werden trotzdem gegessen, je nach Anzahl die sie überhaupt essen können
-      rabbits = round(rabbits) - (foxesCanEat * 3);
       
+      rabbits = rabbits - foxesCanEat;
       
     }
     
     
-    //Füchse und Hasen können nicht mehr -1 werden und somit 
-    //sind keine negativen Rechnungen mehr möglich.
-    if(foxes <= 0){
+    
+    //Um negative Rechnungen zu vermeiden
+    if(foxes < 0){
       foxes = 0;
-    }    
-    if(rabbits <= 0){
+    }
+    if(rabbits < 0){
       rabbits = 0;
     }
-       //<>// //<>//
+    
+    
+
+
+    
+ //<>//
 
     
     //Graph für die Hasen
     stroke(50,200,255);
-    strokeWeight(2);
-    line(i * 3 ,0,i * 3,rabbits);
+    strokeWeight(1);
+    line(i * 5 , windowHeight , i * 5 , rabbits);
     
     
     //Graph für die Füchse
     stroke(50,255,0);
-    strokeWeight(2);
-    line(i * 3 +1 ,0,i * 3 + 1,foxes);
+    strokeWeight(1);
+    line(i * 5 + 1 , 0 , i * 5 + 1, foxes);
     
     
     //Konsolenausgabe
@@ -110,16 +116,19 @@ public void population(){
       println("|##########################|");
       println("         ");
       println("         ");
-      println("> Jahr: " + round(2016 + i));
-      println("Hasen: " + rabbits + " | Füchse: " + foxes);
-      println("Wunsch: " + wishAmountOfRabbits);
-      println("         ");
-    }else{
-      println("> Jahr: " + round(2016 + i));
-      println("Hasen: " + rabbits + " | Füchse: " + foxes);
-      println("Wunsch: " + wishAmountOfRabbits);
-      println("         ");    
     }
+    
+    println("> Jahr: " + round(2016 + i));
+    println("Anzahl an Hasen am Anfang des Jahres: " + rabbitsAtBeginning);
+    println("Anzahl an Füchse am Anfang des Jahres: " + foxesAtBeginning);
+    println("Geborene Hasen: " + bornRabbits + " (" + (bornRabbits + rabbitsAtBeginning) + ") | Geborene Füchse: " + bornFoxes + " (" + (bornFoxes + foxesAtBeginning) + ")");
+    println("         ");
+    println("Erwischt: " + foxesCanEat);
+    println("Sie hätten -> " + foxesCanCatch + " <- erwischen können.");
+    println("Endstand: Hasen: " + rabbits + " | Füchse: " + foxes);
+    println("         ");
+    println("---------");
+    println("         ");
      
   }
   
@@ -129,8 +138,8 @@ void draw(){
 
   //Anfangszahlen im Jahr 0 bevor die Geburtsphase anfängt
   
-  rabbits = 60;
-  foxes = 40;
+  rabbits = 100;
+  foxes = 10;
   
   background(50,50,50);
   
