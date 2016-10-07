@@ -25,12 +25,12 @@ float windowWidth = 1280;
   float eatenRabbitsPerFox = 2;
   
   //Berechnung bis zum Jahr x
-  float years = 50;
+  float years = 500;
   
   float n = 202.5;
   
-  float timeInterval = 1;
-  float graphFac = 5;
+  float timeInterval = 10;
+  float graphFac = 1;
 
 // ******* Calculation Variablen ******
 
@@ -63,10 +63,10 @@ public void population(){
    
     float foxesCanEat = min(rabbits, min(foxesWantEat, foxesCanCatch));
     
-      rabbits = rabbits - foxesCanEat;
-
-    
+    rabbits = rabbits - foxesCanEat;
     float foxesSaturated = foxesCanEat / eatenRabbitsPerFox;
+    
+    
     if (foxesSaturated < foxes){
       foxes = foxesSaturated;
     }else{
@@ -131,12 +131,21 @@ void draw(){
   //Anfangszahlen im Jahr 0 bevor die Geburtsphase anfängt
   
   rabbits = 1000;
-  foxes = 20;
+  foxes = 5;
   
   background(50,50,50);
   
   //Populationssimulation wird gestartet
   population();
+  
+  stroke(250,0,0);
+  fill(50, 55, 100);
+  rect(windowWidth - 150, 0, 150, 55, 0, 0, 0, 18);
+  
+  fill(255);
+  textSize(16);
+  text("Jahre: " + years, windowWidth - 140, 23); 
+  text("Abstand: " + timeInterval, windowWidth - 140, 43); 
   
 
 }
