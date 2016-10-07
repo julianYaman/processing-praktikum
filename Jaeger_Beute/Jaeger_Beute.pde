@@ -14,11 +14,11 @@ float windowWidth = 1280;
 
   //Hasen und Geburtenrate
   float rabbits;
-  float comingRabbits = 0.2;
+  float comingRabbits = 0.25;
   
   //Füchse und Geburtenrate foxesWantEat
   float foxes;
-  float comingFoxes = 0.15;
+  float comingFoxes = 0.2;
   
   //Sterbevariablen
   //Jedes Jahr wird x Hase pro Fuchs gegessen.
@@ -59,7 +59,7 @@ public void population(){
     
     float foxesWantEat = foxes * eatenRabbitsPerFox;
     
-    float foxesCanCatch = foxes * rabbits / n * foxes /n;
+    float foxesCanCatch = n / foxes * rabbits;
    
     float foxesCanEat = min(rabbits, min(foxesWantEat, foxesCanCatch));
     
@@ -131,7 +131,7 @@ void draw(){
   //Anfangszahlen im Jahr 0 bevor die Geburtsphase anfängt
   
   rabbits = 1000;
-  foxes = 50;
+  foxes = 20;
   
   background(50,50,50);
   

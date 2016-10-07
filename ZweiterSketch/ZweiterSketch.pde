@@ -26,7 +26,7 @@ float halfWidth = windowWidth / 2;
 float halfHeight = windowHeight / 2;
 
 // Nullpunkt-Achsenwerte
-float zeroPoint_x = halfWidth; 
+float zeroPoint_x = 100; 
 float zeroPoint_y = 650;
 
 //Linienwerter
